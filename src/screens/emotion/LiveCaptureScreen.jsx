@@ -12,10 +12,16 @@ export default function LiveCaptureScreen() {
 
   useEffect(() => {
     navigator.mediaDevices?.getUserMedia({ video: { facingMode: 'user' } })
-      .then(s => { setStream(s); if (videoRef.current) videoRef.current.srcObject = s; })
+      .then(s => { setStream(s); })
       .catch(() => setError('Camera not available. Using demo mode.'));
     return () => stream?.getTracks().forEach(t => t.stop());
   }, []);
+
+  useEffect(() => {
+    if (stream && videoRef.current) {
+      videoRef.current.srcObject = stream;
+    }
+  }, [stream]);
 
   function capturePhoto() {
     setCapturing(true);
